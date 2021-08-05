@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Profile;
 import com.ribeiro.livraria.service.DBService;
 
 @Configuration
-@Profile("test")
+@Profile("test") /* definindo perfil de teste */
 public class TestConfig {
 
 	@Autowired

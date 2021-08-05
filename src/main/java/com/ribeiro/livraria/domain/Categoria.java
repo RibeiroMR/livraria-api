@@ -15,13 +15,13 @@ import javax.persistence.OneToMany;
 public class Categoria implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	@Id
+	@Id /* definindo atributo identificador da classe */
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Integer id;
 	private String nome;
 	private String descricao;
 
-	@OneToMany(mappedBy = "categoria")
+	@OneToMany(mappedBy = "categoria")  /* realacao de um para muitos (Uma Categoria é associado a Muitos Livros ) */
 	private List<Livro> livros = new ArrayList<>();
 
 	public Categoria() {

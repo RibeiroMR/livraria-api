@@ -9,13 +9,13 @@ import org.springframework.context.annotation.Profile;
 import com.ribeiro.livraria.service.DBService;
 
 @Configuration
-@Profile("dev")
+@Profile("dev") /* definindo perfil de desenvolvimento */
 public class DevConfig {
 
 	@Autowired
 	private DBService dbService;
 
-	@Value("${spring.jpa.hibernate.ddl-auto}")
+	@Value("${spring.jpa.hibernate.ddl-auto}") /* pegando valor definido na configuracao do arquivo application-dev.properties */
 	private String strategy;
 
 	@Bean

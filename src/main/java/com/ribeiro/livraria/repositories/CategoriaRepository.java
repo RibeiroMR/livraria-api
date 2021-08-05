@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.ribeiro.livraria.domain.Categoria;
 
-@Repository
+@Repository /* agregacao aos objetos de negocio e dominio (Categoria) */
 public interface CategoriaRepository extends JpaRepository<Categoria, Integer> {
 
 }

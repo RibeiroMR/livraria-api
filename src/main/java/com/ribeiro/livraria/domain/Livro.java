@@ -10,19 +10,22 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
-@Entity
-public class Livro implements Serializable {
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+@Entity /* Definindo que esta classe é uma entidade na base de dados */
+public class Livro implements Serializable { /* Serializando objetos dessa classe para utilizar externamente do código fonte */
 	private static final long serialVersionUID = 1L;
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@GeneratedValue(strategy = GenerationType.IDENTITY) /* atribuir chaves primárias para a entidade */
 	private Integer id;
 	private String titulo;
 	private String nomeAutor;
 	private String texto;
 
-	@ManyToOne
-	@JoinColumn(name = "categoria_id")
+	@JsonIgnore /* Protegendo contra serializaçao de categoria, uma vez que a categoria ja foi serizalizada, evitando looping infinito */
+	@ManyToOne /* realacao de muitos para um (Um ou Mais Livros é associado Uma Categoria )*/
+	@JoinColumn(name = "categoria_id") /* definindo junção com categoria */
 	private Categoria categoria;
 
 	public Livro() {
