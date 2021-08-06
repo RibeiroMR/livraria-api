@@ -50,12 +50,19 @@ public class CategoriaService {
 	}
 
 	public Categoria update(Integer id, CategoriaDTO objDto) {
-		/*
-		 * busca pelo Id para verificar se o objeto existe
-		 */
+		/* busca pelo Id para verificar se o objeto existe */
 		Categoria obj = findById(id);
 		obj.setNome(objDto.getNome());
 		obj.setDescricao(objDto.getDescricao());
 		return categoriaRepository.save(obj);
+	}
+
+	public void delete(Integer id) {
+		findById(id);
+		/*
+		 * metodo nativo JpaRepository do Spring Data Jpa, excluindo objeto pelo Id caso
+		 * encontrado
+		 */
+		categoriaRepository.deleteById(id);
 	}
 }
