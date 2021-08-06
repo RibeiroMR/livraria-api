@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import com.ribeiro.livraria.service.exceptions.DataIntegrityViolationException;
 import com.ribeiro.livraria.service.exceptions.ObjectNotFoundException;
 
 /* classe que filtra a excecao dos recursos tratando de forma personalizada
@@ -25,9 +26,21 @@ public class ResourceExceptionHandler {
 		StandardError error = new StandardError(System.currentTimeMillis(), HttpStatus.NOT_FOUND.value(),
 				e.getMessage());
 		/*
-		 * retornando o status da requisicao (no caso Not Found) e no corpo da
-		 * resposposta o error carregado
+		 * retornando o status da requisicao Not Found (de que nao foi encontrado o
+		 * objeto) e no corpo da resposposta o error carregado
 		 */
 		return ResponseEntity.status(HttpStatus.NOT_FOUND).body(error);
+	}
+
+	@ExceptionHandler(DataIntegrityViolationException.class)
+	public ResponseEntity<StandardError> dataIntegrityViolationException(DataIntegrityViolationException e,
+			ServletRequest request) {
+		StandardError error = new StandardError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
+				e.getMessage());
+		/*
+		 * retornando o status da requisicao Bad Request para previnir integridade de
+		 * dados associados
+		 */
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	}
 }

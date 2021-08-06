@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import com.ribeiro.livraria.domain.Categoria;
@@ -63,6 +64,19 @@ public class CategoriaService {
 		 * metodo nativo JpaRepository do Spring Data Jpa, excluindo objeto pelo Id caso
 		 * encontrado
 		 */
-		categoriaRepository.deleteById(id);
+		try {
+			/*
+			 * tratando excecao de integridade de dados do pacote
+			 * org.springframework.dao.DataIntegrityViolationException;
+			 */
+			categoriaRepository.deleteById(id);
+		} catch (DataIntegrityViolationException e) {
+			/*
+			 * caso encontrado a excecao, passar a mensagem de erro para a classe do pacote
+			 * .service.exceptions.DataIntegrityViolationException
+			 */
+			throw new com.ribeiro.livraria.service.exceptions.DataIntegrityViolationException(
+					"Categoria não pode ser deletada! Passuí livros associados");
+		}
 	}
 }
