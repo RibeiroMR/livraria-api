@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ribeiro.livraria.domain.Categoria;
+import com.ribeiro.livraria.dtos.CategoriaDTO;
 import com.ribeiro.livraria.repositories.CategoriaRepository;
 import com.ribeiro.livraria.service.exceptions.ObjectNotFoundException;
 
@@ -45,6 +46,16 @@ public class CategoriaService {
 		 * atualizacao
 		 */
 		obj.setId(null);
+		return categoriaRepository.save(obj);
+	}
+
+	public Categoria update(Integer id, CategoriaDTO objDto) {
+		/*
+		 * busca pelo Id para verificar se o objeto existe
+		 */
+		Categoria obj = findById(id);
+		obj.setNome(objDto.getNome());
+		obj.setDescricao(objDto.getDescricao());
 		return categoriaRepository.save(obj);
 	}
 }
