@@ -33,7 +33,7 @@ public class CategoriaService {
 		 * service.exceptions, no caso de uma busca por ID retornar vazio
 		 */
 		return obj.orElseThrow(() -> new ObjectNotFoundException(
-				"Objeto não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
+				"Categoria não encontrado! Id: " + id + ", Tipo: " + Categoria.class.getName()));
 	}
 
 	public List<Categoria> findAll() {
