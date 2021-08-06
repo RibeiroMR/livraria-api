@@ -38,4 +38,13 @@ public class CategoriaService {
 		/* retorna uma lista de todas as Categorias no dominio */
 		return categoriaRepository.findAll();
 	}
+
+	public Categoria create(Categoria obj) {
+		/*
+		 * setando o Id como null para o JPA nao interpretar a insercao como uma
+		 * atualizacao
+		 */
+		obj.setId(null);
+		return categoriaRepository.save(obj);
+	}
 }

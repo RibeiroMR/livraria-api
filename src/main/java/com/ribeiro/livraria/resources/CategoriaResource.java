@@ -1,5 +1,6 @@
 package com.ribeiro.livraria.resources;
 
+import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -7,8 +8,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import com.ribeiro.livraria.domain.Categoria;
 import com.ribeiro.livraria.dtos.CategoriaDTO;
@@ -32,8 +36,8 @@ public class CategoriaResource {
 	}
 
 	/*
-	 * quando ocorrer uma requisisao no endpoint /categoria sem argumento, sera
-	 * retornado no corpo da requisisao do tipo lista de todas as categorias
+	 * quando ocorrer uma requisicao no endpoint /categoria sem argumento, sera
+	 * retornado no corpo da requisicao do tipo lista de todas as categorias
 	 */
 	@GetMapping
 	public ResponseEntity<List<CategoriaDTO>> findAll() {
@@ -41,5 +45,29 @@ public class CategoriaResource {
 		/* transformando uma Lista de Categoria em uma Lista de CategoriaDTO */
 		List<CategoriaDTO> listDto = list.stream().map(obj -> new CategoriaDTO(obj)).collect(Collectors.toList());
 		return ResponseEntity.ok().body(listDto);
+	}
+
+	/*
+	 * Requisicao de endpoint POST, para criar um novo objeto na base de dados do
+	 * tipo Categoria. No corpo da requisicao e carregado um objeto do tipo
+	 * Categoria
+	 */
+	@PostMapping
+	public ResponseEntity<Categoria> create(@RequestBody Categoria obj) {
+		/*
+		 * obj (Categoria) recebe ele mesmo apos inserir no banco, passando o proprio
+		 * obj no parametro
+		 */
+		obj = categoriaService.create(obj);
+		/*
+		 * por questao de boas praticas,recomenda-se deve retorna para o usuario uma URI
+		 * de acesso daquela novo objeto criado.
+		 */
+		URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(obj.getId()).toUri();
+		/*
+		 * URI (Uniform Resource Identifier - cadeia de caracteres compacta usada para
+		 * identificar ou denominar um recurso na Internet.)
+		 */
+		return ResponseEntity.created(uri).build();
 	}
 }
