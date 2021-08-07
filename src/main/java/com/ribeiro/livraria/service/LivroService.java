@@ -4,12 +4,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.GetMapping;
 
 import com.ribeiro.livraria.domain.Livro;
-import com.ribeiro.livraria.dtos.LivroDTO;
 import com.ribeiro.livraria.repositories.LivroRepository;
 import com.ribeiro.livraria.service.exceptions.ObjectNotFoundException;
 
@@ -36,5 +33,18 @@ public class LivroService {
 		 * classes associadas, nescessitando criar uma personalizada no Repository
 		 */
 		return livroRepository.findAllByCategoria(id_cat);
+	}
+
+	public Livro update(Integer id, Livro obj) {
+		Livro newObj = findById(id);
+		/* atualizando valores do newObj com os valores do obj */
+		updateData(newObj, obj);
+		return livroRepository.save(newObj);
+	}
+
+	private void updateData(Livro newObj, Livro obj) {
+		newObj.setTitulo(obj.getTitulo());
+		newObj.setNomeAutor(obj.getNomeAutor());
+		newObj.setTexto(obj.getTexto());
 	}
 }
