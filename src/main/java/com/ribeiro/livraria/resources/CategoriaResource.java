@@ -4,8 +4,11 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,6 +23,7 @@ import com.ribeiro.livraria.domain.Categoria;
 import com.ribeiro.livraria.dtos.CategoriaDTO;
 import com.ribeiro.livraria.service.CategoriaService;
 
+@CrossOrigin("*")
 @RestController /* Controlador REST retornando para HTTP um JSON (ou posivelmente XML) */
 @RequestMapping(value = "/categorias") /* Define Endpoint da aplicacao para Categoria */
 public class CategoriaResource {
@@ -52,10 +56,11 @@ public class CategoriaResource {
 	/*
 	 * Requisicao de endpoint POST, para criar um novo objeto na base de dados do
 	 * tipo Categoria. No corpo da requisicao e carregado um objeto do tipo
-	 * Categoria
+	 * Categoria. Anotacao @Valid para validar se o objeto esta atendendo aos
+	 * requisitos definidos no domain
 	 */
 	@PostMapping
-	public ResponseEntity<Categoria> create(@RequestBody Categoria obj) {
+	public ResponseEntity<Categoria> create(@Valid @RequestBody Categoria obj) {
 		/*
 		 * obj (Categoria) recebe ele mesmo apos inserir no banco, passando o proprio
 		 * obj no parametro
@@ -78,7 +83,7 @@ public class CategoriaResource {
 	 * Categoria. Carregando um Id na path e um Dto de Categoria na requisicao
 	 */
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<CategoriaDTO> update(@PathVariable Integer id, @RequestBody CategoriaDTO objDto) {
+	public ResponseEntity<CategoriaDTO> update(@PathVariable Integer id, @Valid @RequestBody CategoriaDTO objDto) {
 		Categoria newObj = categoriaService.update(id, objDto);
 		return ResponseEntity.ok().body(new CategoriaDTO(newObj));
 	}

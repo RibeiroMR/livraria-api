@@ -4,8 +4,11 @@ import java.net.URI;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -22,6 +25,8 @@ import com.ribeiro.livraria.domain.Livro;
 import com.ribeiro.livraria.dtos.LivroDTO;
 import com.ribeiro.livraria.service.LivroService;
 
+/* @CrossOrigin infoma que o endpoint recebe requisicoes de diversas outras fontes */
+@CrossOrigin("*")
 @RestController
 @RequestMapping(value = "/livros")
 public class LivroResource {
@@ -50,14 +55,14 @@ public class LivroResource {
 
 	/* O PUT é utilizado para atualizar muitas informacoes */
 	@PutMapping(value = "/{id}")
-	public ResponseEntity<Livro> update(@PathVariable Integer id, @RequestBody Livro obj) {
+	public ResponseEntity<Livro> update(@PathVariable Integer id, @Valid @RequestBody Livro obj) {
 		Livro newObj = livroService.update(id, obj);
 		return ResponseEntity.ok().body(newObj);
 	}
 
 	/* O PATCH é utilizado para atualizar uma parcela da informacao */
 	@PatchMapping(value = "/{id}")
-	public ResponseEntity<Livro> updatePatch(@PathVariable Integer id, @RequestBody Livro obj) {
+	public ResponseEntity<Livro> updatePatch(@PathVariable Integer id, @Valid @RequestBody Livro obj) {
 		Livro newObj = livroService.update(id, obj);
 		return ResponseEntity.ok().body(newObj);
 	}
@@ -66,7 +71,7 @@ public class LivroResource {
 	// localhost:8080/livros?categoria=id da categoria
 	@PostMapping
 	public ResponseEntity<Livro> create(@RequestParam(value = "categoria", defaultValue = "0") Integer id_cat,
-			@RequestBody Livro obj) {
+			@Valid @RequestBody Livro obj) {
 		Livro newObj = livroService.create(id_cat, obj);
 		/* nesse caso chamar o metodo fromCurrentContextPath() */
 		URI uri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/livros/{id}")

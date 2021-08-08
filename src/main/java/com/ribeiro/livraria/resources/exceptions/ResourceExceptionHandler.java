@@ -4,6 +4,8 @@ import javax.servlet.ServletRequest;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
@@ -40,6 +42,28 @@ public class ResourceExceptionHandler {
 		/*
 		 * retornando o status da requisicao Bad Request para previnir integridade de
 		 * dados associados
+		 */
+		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
+	}
+
+	@ExceptionHandler(MethodArgumentNotValidException.class)
+	public ResponseEntity<StandardError> validationErrors(MethodArgumentNotValidException e, ServletRequest request) {
+		/*
+		 * carregando um ValidationError onde tem a lista de FieldMessage
+		 */
+		ValidationError error = new ValidationError(System.currentTimeMillis(), HttpStatus.BAD_REQUEST.value(),
+				"Erro na validação dos campos!");
+
+		/*
+		 * pra cada FieldError recebido e adiciona um novo erro da lista de error
+		 */
+		for (FieldError x : e.getBindingResult().getFieldErrors()) {
+			error.addErrors(x.getField(), x.getDefaultMessage());
+		}
+
+		/*
+		 * retornando o status da requisicao Bad Request para previnir integridade de
+		 * dados
 		 */
 		return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);
 	}
